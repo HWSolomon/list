@@ -13,59 +13,62 @@ public class InfList : MonoBehaviour
     public float maxCount;
     public List<GameObject> _list;
     public int change;
-
+    public RectTransform master;
+    public int Transf;
 
     void Start()
     {
         infiniteL = 1;
-        maxCount = 2;
+        maxCount = 1;
         change = 0;
         count.text = infiniteL.ToString();
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))// used to generate new list parts when at the end and used to deactivate and activate when scrolling through the list itself
+        count.text = infiniteL.ToString();
+
+        if (change <= 2)
         {
+            change += 1;
+
+            GameObject cloneDown = Instantiate(original, new Vector3(0, change * -Transf, 0), Quaternion.identity);
+            cloneDown.transform.SetParent(transform, false);
+            cloneDown.SetActive(true);
+            _list.Add(cloneDown);
             infiniteL += 1;
-            count.text = infiniteL.ToString();
-            if (infiniteL == maxCount)
-            {
-                maxCount += 1;
-                GameObject clone = Instantiate(original);
-                clone.transform.SetParent(transform, false);
-                clone.SetActive(true);
-                _list.Add(clone);
 
-            }
-
-            for (int i = 0; i < infiniteL - 1; i++)
-            {
-                _list[i].SetActive(false);
-            }
-
-            change = infiniteL;
-            change -= 1;
-
-            _list[change].SetActive(true);
+            GameObject cloneUp = Instantiate(original, new Vector3(0, change * Transf, 0), Quaternion.identity);
+            cloneUp.transform.SetParent(transform, false);
+            cloneUp.SetActive(true);
+            _list.Add(cloneUp);
+            infiniteL += 1;
         }
 
-        if (Input.GetKeyDown(KeyCode.W) && infiniteL > 1)//used to scroll up into the list by activating and deactivating the list parts
+        if (transform.localPosition.y >= maxCount * 80 || transform.localPosition.y <= maxCount * -80)
         {
+            maxCount += 1;
+            change += 1;
+            GameObject cloneDown = Instantiate(original, new Vector3(0, change * -Transf, 0), Quaternion.identity);
+            cloneDown.transform.SetParent(transform, false);
+            cloneDown.SetActive(true);
+            _list.Add(cloneDown);
+            infiniteL += 1;
 
-            for (int i = 0; i < maxCount - 1; i++)
-            {
-                _list[i].SetActive(false);
-            }
-
-            infiniteL -= 1;
-            change = infiniteL;
-            change -= 1;
-
-            count.text = infiniteL.ToString();
-            _list[change].SetActive(true);
-
+            GameObject cloneUp = Instantiate(original, new Vector3(0, change * Transf, 0), Quaternion.identity);
+            cloneUp.transform.SetParent(transform, false);
+            cloneUp.SetActive(true);
+            _list.Add(cloneUp);
+            infiniteL += 1;
 
         }
+    }
+
+    public void GenerateBottom()
+    {
+        GameObject clone = Instantiate(original, new Vector3(0, maxCount * -Transf, 0), Quaternion.identity);
+        clone.transform.SetParent(transform, false);
+        clone.SetActive(true);
+        _list.Add(clone);
     }
 }
