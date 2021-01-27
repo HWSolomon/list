@@ -13,7 +13,6 @@ public class InfList : MonoBehaviour
     public float maxCount;
     public List<GameObject> _list;
     public int change;
-    public RectTransform master;
     public int Transf;
 
     void Start()
